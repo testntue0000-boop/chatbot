@@ -7,7 +7,11 @@ st.set_page_config(page_title="國北教教務處數位助理", page_icon="🎓"
 
 # 2. 初始化 OpenAI 客戶端 (從環境變數讀取金鑰)
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-client = OpenAI(api_key=OPENAI_API_KEY)
+# client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(
+    api_key=os.environ.get("DEEPSEEK_API_KEY"),
+    base_url="https://api.deepseek.com"
+)
 
 # 3. 讀取教務處 Q&A 知識庫
 def get_knowledge():
@@ -64,7 +68,8 @@ if user_input := st.chat_input("請輸入您的校務、選課、招生考科、
         
         try:
             response = client.chat.completions.create(
-                model="gpt-4o-mini",
+                # model="gpt-4o-mini",
+                model="deepseek-chat",
                 messages=[
                     {"role": "system", "content": system_prompt},
                     *st.session_state.messages  # 帶入完整的 messages 歷史紀錄，完美支持上下文記憶
